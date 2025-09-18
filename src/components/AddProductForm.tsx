@@ -11,7 +11,9 @@ export const AddProductForm = () => {
     name: "",
     price: "",
     description: "",
+    imageUrl: "",
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const { toast } = useToast();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -21,7 +23,8 @@ export const AddProductForm = () => {
       title: "Product Added!",
       description: "Your product has been listed successfully.",
     });
-    setFormData({ name: "", price: "", description: "" });
+    setFormData({ name: "", price: "", description: "", imageUrl: "" });
+    setImageFile(null);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -29,6 +32,22 @@ export const AddProductForm = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setFormData({
+          ...formData,
+          imageUrl: e.target?.result as string,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -73,6 +92,27 @@ export const AddProductForm = () => {
               placeholder="Describe your item..."
               rows={3}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="image">Product Image</Label>
+            <Input
+              id="image"
+              name="image"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+            />
+            {formData.imageUrl && (
+              <div className="mt-2">
+                <img 
+                  src={formData.imageUrl} 
+                  alt="Preview" 
+                  className="w-24 h-24 object-cover rounded-lg border"
+                />
+              </div>
+            )}
           </div>
           
           <div className="space-y-2">
