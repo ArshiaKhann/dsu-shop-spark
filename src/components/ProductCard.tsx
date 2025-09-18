@@ -21,16 +21,6 @@ export const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <Card className="group cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 border-border/50">
       <CardContent className="p-4">
-        <div className="aspect-square bg-muted rounded-lg mb-4 overflow-hidden">
-          <img 
-            src={product.imageUrl || `https://images.unsplash.com/featured/?${product.id}&w=300&h=300&fit=crop&auto=format`}
-            alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-            onError={(e) => {
-              e.currentTarget.src = `https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=300&fit=crop&auto=format&q=80`;
-            }}
-          />
-        </div>
         
         <div className="space-y-3">
           <div>

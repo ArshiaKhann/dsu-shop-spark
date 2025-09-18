@@ -5,53 +5,12 @@ import { AddProductForm } from "@/components/AddProductForm";
 import { Button } from "@/components/ui/button";
 import { Plus, Grid3X3, List } from "lucide-react";
 
-// Initial product data with images
 const initialProducts = [
-  { 
-    id: 1, 
-    name: "Rice 1kg", 
-    price: 65, 
-    currency: "₹", 
-    location: "DSU", 
-    availability: "Available",
-    imageUrl: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300&h=300&fit=crop&auto=format&q=80"
-  },
-  { 
-    id: 2, 
-    name: "Notebook", 
-    price: 45, 
-    currency: "₹", 
-    location: "DSU", 
-    availability: "Available",
-    imageUrl: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=300&fit=crop&auto=format&q=80"
-  },
-  { 
-    id: 3, 
-    name: "Toothpaste", 
-    price: 30, 
-    currency: "₹", 
-    location: "DSU", 
-    availability: "Available",
-    imageUrl: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=300&fit=crop&auto=format&q=80"
-  },
-  { 
-    id: 4, 
-    name: "Cooking Oil 1L", 
-    price: 120, 
-    currency: "₹", 
-    location: "DSU", 
-    availability: "Available",
-    imageUrl: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300&h=300&fit=crop&auto=format&q=80"
-  },
-  { 
-    id: 5, 
-    name: "Pen (Pack of 5)", 
-    price: 50, 
-    currency: "₹", 
-    location: "DSU", 
-    availability: "Available",
-    imageUrl: "https://images.unsplash.com/photo-1586880244386-8b3e34394bab?w=300&h=300&fit=crop&auto=format&q=80"
-  },
+  { id: 1, name: "Rice 1kg", price: 65, currency: "₹", location: "DSU", availability: "Available" },
+  { id: 2, name: "Notebook", price: 45, currency: "₹", location: "DSU", availability: "Available" },
+  { id: 3, name: "Toothpaste", price: 30, currency: "₹", location: "DSU", availability: "Available" },
+  { id: 4, name: "Cooking Oil 1L", price: 120, currency: "₹", location: "DSU", availability: "Available" },
+  { id: 5, name: "Pen (Pack of 5)", price: 50, currency: "₹", location: "DSU", availability: "Available" }
 ];
 
 const Index = () => {
