@@ -4,22 +4,29 @@ import { ProductGrid } from "@/components/ProductGrid";
 import { AddProductForm } from "@/components/AddProductForm";
 import { Button } from "@/components/ui/button";
 import { Plus, Grid3X3, List } from "lucide-react";
-
-const initialProducts = [
-  { id: 1, name: "Rice 1kg", price: 65, currency: "₹", location: "DSU", availability: "Available" },
-  { id: 2, name: "Notebook", price: 45, currency: "₹", location: "DSU", availability: "Available" },
-  { id: 3, name: "Toothpaste", price: 30, currency: "₹", location: "DSU", availability: "Available" },
-  { id: 4, name: "Cooking Oil 1L", price: 120, currency: "₹", location: "DSU", availability: "Available" },
-  { id: 5, name: "Pen (Pack of 5)", price: 50, currency: "₹", location: "DSU", availability: "Available" }
-];
+import { useProducts } from "@/hooks/useProducts";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   const [showAddForm, setShowAddForm] = useState(false);
-  const [products] = useState(initialProducts);
+  const { products, loading } = useProducts();
+  const { user } = useAuth();
+
+  const handleBrowseClick = () => {
+    setShowAddForm(false);
+  };
+
+  const handleSellClick = () => {
+    setShowAddForm(true);
+  };
+
+  const handleProductAdded = () => {
+    setShowAddForm(false);
+  };
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      <Header onBrowseClick={handleBrowseClick} onSellClick={handleSellClick} />
       
       <main className="container py-8">
         {!showAddForm ? (
@@ -33,7 +40,7 @@ const Index = () => {
                 Buy and sell items within the DSU community
               </p>
               <Button 
-                onClick={() => setShowAddForm(true)}
+                onClick={handleSellClick}
                 size="lg"
                 className="bg-primary hover:bg-primary/90"
               >
@@ -58,7 +65,11 @@ const Index = () => {
                 </div>
               </div>
               
-              <ProductGrid products={products} />
+              {loading ? (
+                <div className="text-center py-8">Loading products...</div>
+              ) : (
+                <ProductGrid products={products} />
+              )}
             </div>
           </>
         ) : (
@@ -66,13 +77,13 @@ const Index = () => {
             <div className="mb-6 text-center">
               <Button 
                 variant="ghost" 
-                onClick={() => setShowAddForm(false)}
+                onClick={handleBrowseClick}
                 className="mb-4"
               >
                 ← Back to Products
               </Button>
             </div>
-            <AddProductForm />
+            <AddProductForm onProductAdded={handleProductAdded} />
           </div>
         )}
       </main>

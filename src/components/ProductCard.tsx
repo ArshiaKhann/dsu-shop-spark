@@ -3,15 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  currency: string;
-  location: string;
-  availability?: string;
-  imageUrl?: string;
-}
+import { Product } from "@/hooks/useProducts";
 
 interface ProductCardProps {
   product: Product;
@@ -29,7 +21,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             </h3>
             <div className="flex items-center justify-between mt-2">
               <span className="text-2xl font-bold text-price">
-                {product.currency}{product.price}
+                ₹{product.price}
               </span>
               <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
                 <Heart className="h-4 w-4" />

@@ -1,27 +1,84 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useProducts } from "@/hooks/useProducts";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
-export const AddProductForm = () => {
+interface AddProductFormProps {
+  onProductAdded: () => void;
+}
+
+export const AddProductForm = ({ onProductAdded }: AddProductFormProps) => {
   const [formData, setFormData] = useState({
     name: "",
     price: "",
     description: "",
+    seller_name: "",
   });
+  const [loading, setLoading] = useState(false);
+  const { addProduct } = useProducts();
+  const { user } = useAuth();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // This will be connected to Supabase later
-    toast({
-      title: "Product Added!",
-      description: "Your product has been listed successfully.",
-    });
-    setFormData({ name: "", price: "", description: "" });
+    
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to add a product",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { error } = await addProduct({
+        name: formData.name,
+        price: parseFloat(formData.price),
+        description: formData.description,
+        seller_name: formData.seller_name,
+        location: 'DSU',
+        availability: 'Available',
+      });
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: error,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Success",
+          description: "Product added successfully!",
+        });
+        
+        // Reset form
+        setFormData({
+          name: "",
+          price: "",
+          description: "",
+          seller_name: "",
+        });
+        
+        onProductAdded();
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to add product",
+        variant: "destructive",
+      });
+    }
+
+    setLoading(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -30,7 +87,6 @@ export const AddProductForm = () => {
       [e.target.name]: e.target.value,
     });
   };
-
 
   return (
     <Card className="max-w-md mx-auto">
@@ -61,6 +117,8 @@ export const AddProductForm = () => {
               onChange={handleChange}
               placeholder="Enter price in rupees"
               required
+              min="0"
+              step="0.01"
             />
           </div>
           
@@ -76,6 +134,17 @@ export const AddProductForm = () => {
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="seller_name">Seller Name</Label>
+            <Input
+              id="seller_name"
+              name="seller_name"
+              value={formData.seller_name}
+              onChange={handleChange}
+              placeholder="Your name"
+              required
+            />
+          </div>
           
           <div className="space-y-2">
             <Label>Location</Label>
@@ -86,8 +155,8 @@ export const AddProductForm = () => {
             />
           </div>
           
-          <Button type="submit" className="w-full">
-            List Product
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "Adding Product..." : "List Product"}
           </Button>
         </form>
       </CardContent>

@@ -1,12 +1,5 @@
 import { ProductCard } from "./ProductCard";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  currency: string;
-  location: string;
-}
+import { Product } from "@/hooks/useProducts";
 
 interface ProductGridProps {
   products: Product[];
