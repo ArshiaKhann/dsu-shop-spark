@@ -26,7 +26,7 @@ export const Header = ({ onBrowseClick, onSellClick }: HeaderProps) => {
         <div className="flex items-center space-x-2">
           <ShoppingBag className="h-8 w-8 text-primary" />
           <h1 className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-            DSU Marketplace
+            Marketplace
           </h1>
         </div>
         
