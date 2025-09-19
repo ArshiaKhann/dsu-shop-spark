@@ -45,7 +45,6 @@ export const AddProductForm = ({ onProductAdded }: AddProductFormProps) => {
         description: formData.description,
         seller_name: formData.seller_name,
         location: 'DSU',
-        availability: 'Available',
       });
 
       if (error) {

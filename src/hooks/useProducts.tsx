@@ -7,8 +7,8 @@ export interface Product {
   price: number;
   description: string | null;
   seller_name: string;
-  location: string;
-  availability: string;
+  location: string | null;
+  availability: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -21,23 +21,30 @@ export const useProducts = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
       const { data, error } = await supabase
         .from('products')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-
+      
       setProducts(data || []);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch products');
+    } catch (err: any) {
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const addProduct = async (productData: Omit<Product, 'id' | 'created_at' | 'updated_at'>) => {
+  const addProduct = async (productData: {
+    name: string;
+    price: number;
+    description?: string;
+    seller_name: string;
+    location?: string;
+  }) => {
     try {
       const { data, error } = await supabase
         .from('products')
@@ -46,37 +53,16 @@ export const useProducts = () => {
         .single();
 
       if (error) throw error;
-
+      
       setProducts(prev => [data, ...prev]);
       return { data, error: null };
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to add product';
-      return { data: null, error: errorMessage };
+    } catch (err: any) {
+      return { data: null, error: err.message };
     }
   };
 
   useEffect(() => {
     fetchProducts();
-
-    // Set up real-time subscription
-    const channel = supabase
-      .channel('products-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'products'
-        },
-        () => {
-          fetchProducts();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, []);
 
   return {

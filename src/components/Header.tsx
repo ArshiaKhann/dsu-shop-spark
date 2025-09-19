@@ -1,33 +1,22 @@
 import { ShoppingBag, Plus, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
-import { AuthModal } from "./AuthModal";
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
-  onBrowseClick: () => void;
-  onSellClick: () => void;
+  onBrowseClick?: () => void;
+  onSellClick?: () => void;
 }
 
 export const Header = ({ onBrowseClick, onSellClick }: HeaderProps) => {
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const { user, signOut } = useAuth();
-  const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleSignOut = async () => {
-    const { error } = await signOut();
-    if (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
+  const handleAuthClick = () => {
+    if (user) {
+      signOut();
     } else {
-      toast({
-        title: "Success",
-        description: "Logged out successfully!",
-      });
+      navigate('/auth');
     }
   };
 
@@ -49,20 +38,11 @@ export const Header = ({ onBrowseClick, onSellClick }: HeaderProps) => {
             <Plus className="h-4 w-4 mr-2" />
             Sell Item
           </Button>
-          {user ? (
-            <Button variant="ghost" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Button>
-          ) : (
-            <Button variant="ghost" size="sm" onClick={() => setShowAuthModal(true)}>
-              <User className="h-4 w-4 mr-2" />
-              Login
-            </Button>
-          )}
+          <Button variant="ghost" size="sm" onClick={handleAuthClick}>
+            {user ? <LogOut className="h-4 w-4 mr-2" /> : <User className="h-4 w-4 mr-2" />}
+            {user ? 'Logout' : 'Login'}
+          </Button>
         </nav>
-        
-        <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
       </div>
     </header>
   );
